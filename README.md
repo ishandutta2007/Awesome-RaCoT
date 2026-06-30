@@ -1,11 +1,16 @@
-# Awesome-RaCoT
-## Retrieval-Augmented Chain-of-Thought (RaCoT): Evolution, Variants, Types, & Applications
+# Awesome-RaCoT 🧠🔗🔍
+
+<div align="center">
+  <img src="assets/banner.svg" alt="Awesome RaCoT Banner" width="100%" />
+</div>
+
+## 🚀 Retrieval-Augmented Chain-of-Thought (RaCoT): Evolution, Variants, Types, & Applications
 
 Retrieval-Augmented Chain-of-Thought (RaCoT) is an advanced neuro-symbolic reasoning framework that bridges the gap between explicit multi-step reasoning (Chain-of-Thought) and dynamic non-parametric knowledge retrieval (Retrieval-Augmented Generation). While standard Chain-of-Thought (CoT) decomposes complex problems into localized, linear logical steps, it relies entirely on the model's static internal memory, leaving it highly vulnerable to compounding hallucinations—where an error in step 2 systematically corrupts the entire downstream deduction tree. RaCoT solves this by interleaving external data verification loops straight into the individual reasoning steps. By dynamically querying vector databases or knowledge graphs *during* the hidden thinking or planning phase, the model validates its intermediate assumptions before generating subsequent tokens, creating a bulletproof reasoning path.
 
 ---
 
-## 1. The Chronological Evolution
+## 📅 1. The Chronological Evolution
 
 The technical framework governing multi-step reasoning verification has transitioned from manual linear prompting prompts to autonomous agentic tool loops and native reinforcement-learned verification networks.
 
@@ -25,7 +30,7 @@ flowchart LR
 
 ---
 
-## 2. Core Functional & Operational Variants
+## ⚙️ 2. Core Functional & Operational Variants
 
 RaCoT architectures are strictly categorized based on the exact operational trigger that initiates an external database query during the reasoning cycle.
 
@@ -38,7 +43,7 @@ RaCoT architectures are strictly categorized based on the exact operational trig
 
 ---
 
-## 3. Structural Integration & Verification Modalities
+## 🛠️ 3. Structural Integration & Verification Modalities
 
 Depending on how the retrieved text data is injected back into the active processing matrix, RaCoT follows distinct multi-step layout pipelines.
 
@@ -51,7 +56,7 @@ Depending on how the retrieved text data is injected back into the active proces
 
 ---
 
-## 4. Production Engineering Challenges & Hardware Solutions
+## 🏗️ 4. Production Engineering Challenges & Hardware Solutions
 
 Deploying real-time interleaved retrieval-reasoning pipelines across enterprise serving infrastructures introduces critical token cost boundaries and time-to-first-token latencies.
 
@@ -63,7 +68,7 @@ Deploying real-time interleaved retrieval-reasoning pipelines across enterprise 
 
 ---
 
-## 5. Frontier Real-World AI Applications
+## 🌟 5. Frontier Real-World AI Applications
 
 | Application | Core Details | Year | First Paper / Source |
 | :--- | :--- | :--- | :--- |
@@ -74,7 +79,7 @@ Deploying real-time interleaved retrieval-reasoning pipelines across enterprise 
 
 ---
 
-## References
+## 📚 References
 1. Wei, J., et al. (2022). Chain-of-thought prompting elicits reasoning in large language models. *Advances in Neural Information Processing Systems (NeurIPS)*, 35, 24824-24837.
 2. Trivedi, H., et al. (2022). Interleaved retrieval augmented generation for knowledge-intensive multi-hop question answering. *arXiv preprint arXiv:2212.10509*.
 3. Yao, S., et al. (2024). Beyond RAG: Active retrieval-augmented chain-of-thought for long-horizon reasoning. *International Conference on Machine Learning (ICML)*.
