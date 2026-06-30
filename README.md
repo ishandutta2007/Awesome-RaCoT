@@ -9,7 +9,7 @@ Retrieval-Augmented Chain-of-Thought (RaCoT) is an advanced neuro-symbolic reaso
 
 The technical framework governing multi-step reasoning verification has transitioned from manual linear prompting prompts to autonomous agentic tool loops and native reinforcement-learned verification networks.
 
-```
+```mermaid
 [Chain-of-Thought (CoT, 2022)] ----> [Static RAG + CoT (One-Shot, 2023)] ----> [Dynamic Interleaved RaCoT (2024-Present)](Linear Unverified Logic Steps)          (Massive Context Window Dumping)              (Step-by-Step Fact-Checking & Self-Correction)
 ```
 
