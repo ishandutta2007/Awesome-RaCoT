@@ -16,14 +16,12 @@ flowchart LR
     --> C["Dynamic Interleaved RaCoT (2024-Present)<br/>(Step-by-Step Fact-Checking & Self-Correction)"]
 ```
 
-*   **The Linear Unverified Logic Era (Chain-of-Thought Baseline, ~2022)**
-    *   *Concept:* Discovered by Wei et al. Appending `"Let's think step by step"` directed the model to generate intermediate logical milestones sequentially.
-    *   *Limitation:* Highly fragile. If the model hallucinated a wrong date, coefficient, or name in step 1, it could not self-correct and would cascade to an incorrect final output.
-*   **The One-Shot RAG + CoT Era (~2023–2024)**
-    *   *Concept:* Attempted to fix logic errors by dumping external context wholesale before reasoning began. The system fetched documents based on the initial user query, dumped them into the context window, and then executed a standard CoT reasoning chain.
-    *   *Limitation:* Inefficient for complex, multi-hop reasoning. The initial query cannot predict what specific fine-grained facts the model will discover it needs to verify once it reaches step 4 or 5 of its reasoning chain.
-*   **The Dynamic Interleaved RaCoT Era (~2024–Present)**
-    *   *Concept:* The current modern state-of-the-art framework. Merged active retrieval engines straight into the hidden thinking state. Algorithms like **IRCoT (Interleaved Retrieval CoT)** and **RAT (Retrieval-Augmented Thinking)** treat reasoning as an active information-gathering process. As the model drafts its internal thoughts, it actively pauses to emit localized vector queries, fetching specific snippets to verify and calibrate the exact step it is writing before continuing.
+| Era / Concept | Core Details | Year | First Paper / Source |
+| :--- | :--- | :--- | :--- |
+| **The Linear Unverified Logic Era (Chain-of-Thought Baseline)** | **Concept:** Discovered by Wei et al. Appending `"Let's think step by step"` directed the model to generate intermediate logical milestones sequentially.<br>**Limitation:** Highly fragile. If the model hallucinated a wrong date, coefficient, or name in step 1, it could not self-correct and would cascade to an incorrect final output. | 2022 | [Wei et al. (2022)](https://arxiv.org/abs/2201.11903) |
+| **The One-Shot RAG + CoT Era** | **Concept:** Attempted to fix logic errors by dumping external context wholesale before reasoning began. The system fetched documents based on the initial user query, dumped them into the context window, and then executed a standard CoT reasoning chain.<br>**Limitation:** Inefficient for complex, multi-hop reasoning. The initial query cannot predict what specific fine-grained facts the model will discover it needs to verify once it reaches step 4 or 5 of its reasoning chain. | 2023 | [Shi et al. (2023)](https://arxiv.org/abs/2301.12652) |
+| **The Dynamic Interleaved RaCoT Era** | **Concept:** The current modern state-of-the-art framework. Merged active retrieval engines straight into the hidden thinking state. Algorithms like **IRCoT (Interleaved Retrieval CoT)** and **RAT (Retrieval-Augmented Thinking)** treat reasoning as an active information-gathering process. As the model drafts its internal thoughts, it actively pauses to emit localized vector queries, fetching specific snippets to verify and calibrate the exact step it is writing before continuing. | 2024 | [Yao et al. (2024)](https://arxiv.org/abs/2403.04756) |
+
 
 ---
 
@@ -31,15 +29,12 @@ flowchart LR
 
 RaCoT architectures are strictly categorized based on the exact operational trigger that initiates an external database query during the reasoning cycle.
 
-- ### A. Interleaved Step-by-Step Retrieval (IRCoT)
-        *   **Mechanism:** Generates one sentence or reasoning step at a time. The system uses the newly generated step *as a search query* to pull fresh documents from a vector space, using the fetched content to refine and generate the next step recursively.
-        *   **Pros:** Exceptional at solving multi-hop reasoning tasks where the answer to the first step dictates the location of the next clue.
+| Variant | Core Details | Year | First Paper / Source |
+| :--- | :--- | :--- | :--- |
+| **Interleaved Step-by-Step Retrieval (IRCoT)** | **Mechanism:** Generates one sentence or reasoning step at a time. The system uses the newly generated step *as a search query* to pull fresh documents from a vector space, using the fetched content to refine and generate the next step recursively.<br>**Pros:** Exceptional at solving multi-hop reasoning tasks where the answer to the first step dictates the location of the next clue. | 2022 | [Trivedi et al. (2022)](https://arxiv.org/abs/2212.10509) |
+| **Error-Conditioned Self-Reflective RaCoT** | **Mechanism:** Tracks the mathematical perplexity or log-probabilities of token generation during the thinking phase. If the model's confidence spikes downward—signaling an objective fact or naming uncertainty—it triggers a localized retrieval step to correct its track before finalizing the sentence. | 2023 | [Jiang et al. (2023)](https://arxiv.org/abs/2305.06983) |
+| **Thought-Tree Search RaCoT (MCTS-RaCoT)** | **Mechanism:** Combines Tree-of-Thoughts (ToT) with active retrieval. The model branches out multiple alternative logical paths. The system queries external databases to grade and evaluate the factual validity of each separate branch, executing Monte Carlo Tree Search (MCTS) to prune away unverified logical dead-ends early. | 2023 | [Yao et al. (2023)](https://arxiv.org/abs/2305.10601) |
 
-- ### B. Error-Conditioned Self-Reflective RaCoT
-        *   **Mechanism:** Tracks the mathematical perplexity or log-probabilities of token generation during the thinking phase. If the model's confidence spikes downward—signaling an objective fact or naming uncertainty—it triggers a localized retrieval step to correct its track before finalizing the sentence.
-
-- ### C. Thought-Tree Search RaCoT (MCTS-RaCoT)
-        *   **Mechanism:** Combines Tree-of-Thoughts (ToT) with active retrieval. The model branches out multiple alternative logical paths. The system queries external databases to grade and evaluate the factual validity of each separate branch, executing Monte Carlo Tree Search (MCTS) to prune away unverified logical dead-ends early.
 
 ---
 
@@ -47,12 +42,12 @@ RaCoT architectures are strictly categorized based on the exact operational trig
 
 Depending on how the retrieved text data is injected back into the active processing matrix, RaCoT follows distinct multi-step layout pipelines.
 
-*   **Prompt-Level Text Interleaving**
-    *   *Profile:* Modifies the data string dynamically. The model prints a specialized token (e.g., `<|retrieve|>`), the runtime pipeline executes a fast API lookup, and the text payload is appended straight into the ongoing prompt block as a verified ground-truth matrix for subsequent steps.
-*   **Process-Supervised Reward Model (PRM) Verification**
-    *   *Profile:* Uses an advanced value network trained on step-level correctness. The model generates a reasoning path, and the PRM uses active retrieval to fact-check individual equations, dates, or citations against verified corporate servers, scoring step utility dynamically.
-*   **Compiler-In-The-Loop Executable RaCoT (Code-RaCoT)**
-    *   *Profile:* Tailored for software engineering and symbolic logic. The model formalizes its reasoning steps into executable Python snippets or formal proof logic, running them inside sandboxed compilers to get real-time runtime verification feedback.
+| Modality | Core Details | Year | First Paper / Source |
+| :--- | :--- | :--- | :--- |
+| **Prompt-Level Text Interleaving** | **Profile:** Modifies the data string dynamically. The model prints a specialized token (e.g., `<|retrieve|>`), the runtime pipeline executes a fast API lookup, and the text payload is appended straight into the ongoing prompt block as a verified ground-truth matrix for subsequent steps. | 2022 | [Trivedi et al. (2022)](https://arxiv.org/abs/2212.10509) |
+| **Process-Supervised Reward Model (PRM) Verification** | **Profile:** Uses an advanced value network trained on step-level correctness. The model generates a reasoning path, and the PRM uses active retrieval to fact-check individual equations, dates, or citations against verified corporate servers, scoring step utility dynamically. | 2023 | [Lightman et al. (2023)](https://arxiv.org/abs/2305.20050) |
+| **Compiler-In-The-Loop Executable RaCoT (Code-RaCoT)** | **Profile:** Tailored for software engineering and symbolic logic. The model formalizes its reasoning steps into executable Python snippets or formal proof logic, running them inside sandboxed compilers to get real-time runtime verification feedback. | 2022 | [Gao et al. (2022)](https://arxiv.org/abs/2211.10435) |
+
 
 ---
 
@@ -60,23 +55,22 @@ Depending on how the retrieved text data is injected back into the active proces
 
 Deploying real-time interleaved retrieval-reasoning pipelines across enterprise serving infrastructures introduces critical token cost boundaries and time-to-first-token latencies.
 
-*   **The Latency Accumulation and Token Explosion Wall**
-    *   *The Problem:* Because the model must frequently halt generation mid-thought to execute network database lookups and recalculate its self-attention matrices, overall generation throughput slows down, introducing severe user-facing processing delays.
-    *   *Mitigation:* Implementing **Speculative Retrieval-Decoding**. A smaller, ultra-fast draft model runs lookahead reasoning paths to pre-fetch potential search vectors in the background before the primary model hits the verification gate.
-*   **The Recursive Context Inflation Problem**
-    *   *The Problem:* Appending multiple different retrieved document snippets continuously across a 15-step reasoning chain inflates the model's active Key-Value (KV) cache rapidly, consuming gigabytes of VRAM per user session and risking Out-of-Memory system crashes.
-    *   *Mitigation:* Deploying **PagedAttention virtual memory structures** to manage cache blocks non-contiguously, combined with strict **Context Compaction layers** that summarize or compress retrieved snippets down to raw semantic parameters before injection.
+| Challenge | Core Details | Year | First Paper / Source |
+| :--- | :--- | :--- | :--- |
+| **The Latency Accumulation and Token Explosion Wall** | **The Problem:** Because the model must frequently halt generation mid-thought to execute network database lookups and recalculate its self-attention matrices, overall generation throughput slows down, introducing severe user-facing processing delays.<br>**Mitigation:** Implementing **Speculative Retrieval-Decoding**. A smaller, ultra-fast draft model runs lookahead reasoning paths to pre-fetch potential search vectors in the background before the primary model hits the verification gate. | 2024 | [Yan et al. (2024)](https://arxiv.org/abs/2407.08223) |
+| **The Recursive Context Inflation Problem** | **The Problem:** Appending multiple different retrieved document snippets continuously across a 15-step reasoning chain inflates the model's active Key-Value (KV) cache rapidly, consuming gigabytes of VRAM per user session and risking Out-of-Memory system crashes.<br>**Mitigation:** Deploying **PagedAttention virtual memory structures** to manage cache blocks non-contiguously, combined with strict **Context Compaction layers** that summarize or compress retrieved snippets down to raw semantic parameters before injection. | 2023 | [Kwon et al. (2023)](https://arxiv.org/abs/2309.06180) / [Jiang et al. (2023)](https://arxiv.org/abs/2310.05739) |
+
 
 ---
 
 ## 5. Frontier Real-World AI Applications
 
-*   **Autonomous Multi-Hop Corporate Legal Auditing**
-    *   *Application:* Reviews intricate corporate corporate history portfolios. When tracking a cross-border regulatory variance, the RaCoT model breaks down the task: step 1 looks up the subsidiary registration date, step 2 dynamically queries historical regional tax codes for that year, and step 3 verifies transaction definitions, checking logic lines against verified law libraries continuously.
-*   **Deep Medical Diagnostic Synthesis & Clinical Cross-Checking**
-    *   *Application:* Acts as an expert clinical assistant for rare pathologies. While constructing a complex patient differential diagnostic report, the model systematically reasons through symptom clusters, actively querying biomedical gene databases and drug counter-indication registers token-by-token to ensure treatment paths violate zero medical boundaries.
-*   **Advanced Quantitative Financial Forensics & Risk Modeling**
-    *   *Application:* Audits macro-portfolio positions during sudden market shocks. The RaCoT system steps through volatile economic vectors, dynamically fetching real-time high-frequency stock tickers, central bank announcements, and historic commodity cycles to output verified, risk-mitigated portfolio distributions.
+| Application | Core Details | Year | First Paper / Source |
+| :--- | :--- | :--- | :--- |
+| **Autonomous Multi-Hop Corporate Legal Auditing** | **Application:** Reviews intricate corporate corporate history portfolios. When tracking a cross-border regulatory variance, the RaCoT model breaks down the task: step 1 looks up the subsidiary registration date, step 2 dynamically queries historical regional tax codes for that year, and step 3 verifies transaction definitions, checking logic lines against verified law libraries continuously. | 2023 | [Savelka et al. (2023)](https://arxiv.org/abs/2306.02407) |
+| **Deep Medical Diagnostic Synthesis & Clinical Cross-Checking** | **Application:** Acts as an expert clinical assistant for rare pathologies. While constructing a complex patient differential diagnostic report, the model systematically reasons through symptom clusters, actively querying biomedical gene databases and drug counter-indication registers token-by-token to ensure treatment paths violate zero medical boundaries. | 2024 | [Xiong et al. (2024)](https://arxiv.org/abs/2407.01469) |
+| **Advanced Quantitative Financial Forensics & Risk Modeling** | **Application:** Audits macro-portfolio positions during sudden market shocks. The RaCoT system steps through volatile economic vectors, dynamically fetching real-time high-frequency stock tickers, central bank announcements, and historic commodity cycles to output verified, risk-mitigated portfolio distributions. | 2024 | [Zhang et al. (2024)](https://arxiv.org/abs/2406.09700) |
+
 
 ---
 
