@@ -98,6 +98,17 @@ To advance this documentation repository, setup workspace, or algorithmic pipeli
 * Generate a **comprehensive Markdown table** explicitly analyzing Standard CoT, Static RAG, Retrieval-Interleaved Generation (RIG), and Retrieval-Augmented Chain-of-Thought (RaCoT) across time-to-first-token latency, VRAM footprint inflation, multi-hop accuracy thresholds, and indexing compute costs.
 * Establish a **performance profiling suite using Triton** to benchmark the exact wall-clock throughput difference of running token-level context compression metrics inside fast GPU registers versus appending raw, uncompressed text blocks across successive transformer attention forward passes.
 
+##  Star History
+<div align="center">
+<a href="https://www.star-history.com/?repos=ishandutta2007%2FAwesome-RaCoT&type=date&legend=bottom-right">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=ishandutta2007/Awesome-RaCoT&type=date&theme=dark&legend=bottom-right" />
+<source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=ishandutta2007/Awesome-RaCoT&type=date&legend=bottom-right" />
+<img alt="Star History Chart" src="https://api.star-history.com/chart?repos=ishandutta2007/Awesome-RaCoT&type=date&legend=bottom-right" />
+</picture>
+</a>
+</div>
+
 ***
 
 **Proactive Repository Follow-Ups:**
@@ -106,4 +117,3 @@ To assist with your documentation repository setup, let me know how you would li
 * I can provide a **complete Python code boilerplate using PyTorch and LlamaIndex** demonstrating how to explicitly capture an intermediate reasoning step and translate it into a vector query.
 * I can generate a **Markdown matrix table** comparing RaCoT frameworks against standard RAG frameworks across latency metrics, token overheads, and factual fidelity.
 * I can write a detailed technical explanation focusing on **how to mitigate the "Lost in the Middle" phenomenon** inside long-context RaCoT inference pipelines.
-Copy
