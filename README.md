@@ -31,14 +31,14 @@ flowchart LR
 
 RaCoT architectures are strictly categorized based on the exact operational trigger that initiates an external database query during the reasoning cycle.
 
--    ### A. Interleaved Step-by-Step Retrieval (IRCoT)
+- ### A. Interleaved Step-by-Step Retrieval (IRCoT)
         *   **Mechanism:** Generates one sentence or reasoning step at a time. The system uses the newly generated step *as a search query* to pull fresh documents from a vector space, using the fetched content to refine and generate the next step recursively.
         *   **Pros:** Exceptional at solving multi-hop reasoning tasks where the answer to the first step dictates the location of the next clue.
 
--    ### B. Error-Conditioned Self-Reflective RaCoT
+- ### B. Error-Conditioned Self-Reflective RaCoT
         *   **Mechanism:** Tracks the mathematical perplexity or log-probabilities of token generation during the thinking phase. If the model's confidence spikes downward—signaling an objective fact or naming uncertainty—it triggers a localized retrieval step to correct its track before finalizing the sentence.
 
--    ### C. Thought-Tree Search RaCoT (MCTS-RaCoT)
+- ### C. Thought-Tree Search RaCoT (MCTS-RaCoT)
         *   **Mechanism:** Combines Tree-of-Thoughts (ToT) with active retrieval. The model branches out multiple alternative logical paths. The system queries external databases to grade and evaluate the factual validity of each separate branch, executing Monte Carlo Tree Search (MCTS) to prune away unverified logical dead-ends early.
 
 ---
